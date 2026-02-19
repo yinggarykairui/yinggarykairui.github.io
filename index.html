@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kairui (Gary) Ying</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --accent: #e8c547;
+      --accent2: #5b8cff;
+      --serif: 'Playfair Display', Georgia, serif;
+      --mono: 'DM Mono', monospace;
+      --sans: 'DM Sans', sans-serif;
+    }
+
+    [data-theme="dark"] {
+      --bg: #0b0c10;
+      --surface: #13141a;
+      --border: #1f2130;
+      --text: #e8e9f0;
+      --muted: #6b6f85;
+      --nav-bg: rgba(11,12,16,0.85);
+      --grid-line: rgba(232,197,71,0.03);
+    }
+
+    [data-theme="light"] {
+      --bg: #f5f4ef;
+      --surface: #eceae0;
+      --border: #d4d0c4;
+      --text: #1a1b22;
+      --muted: #7a7669;
+      --nav-bg: rgba(245,244,239,0.88);
+      --grid-line: rgba(180,160,60,0.07);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0.35;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.2rem 3rem;
+      background: var(--nav-bg);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.3s, border-color 0.3s;
+    }
+
+    .nav-logo { font-family: var(--serif); font-size: 1.1rem; color: var(--accent); }
+    .nav-right { display: flex; align-items: center; gap: 2rem; }
+
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--accent); }
+
+    /* THEME TOGGLE */
+    .theme-toggle {
+      background: none;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      width: 36px; height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      transition: border-color 0.2s, color 0.2s, background 0.3s;
+      flex-shrink: 0;
+    }
+    .theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+    .theme-toggle svg { width: 16px; height: 16px; }
+    .icon-sun { display: none; }
+    .icon-moon { display: block; }
+    [data-theme="light"] .icon-sun { display: block; }
+    [data-theme="light"] .icon-moon { display: none; }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 8rem 3rem 5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg-grid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(var(--grid-line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    .hero-glow {
+      position: absolute;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(91,140,255,0.07) 0%, transparent 70%);
+      top: -100px; right: -100px;
+      pointer-events: none;
+    }
+
+    .hero-content { position: relative; max-width: 1100px; margin: 0 auto; width: 100%; }
+
+    .hero-tag {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards 0.1s;
+    }
+
+    .hero-name {
+      font-family: var(--serif);
+      font-size: clamp(3.5rem, 8vw, 7rem);
+      font-weight: 900;
+      line-height: 1;
+      margin-bottom: 0.4rem;
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards 0.25s;
+    }
+    .hero-name span { color: var(--accent); }
+
+    .hero-title {
+      font-family: var(--serif);
+      font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+      font-weight: 400;
+      color: var(--muted);
+      margin-bottom: 2.5rem;
+      font-style: italic;
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards 0.4s;
+    }
+
+    .hero-links {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards 0.55s;
+    }
+
+    .hero-links a {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text);
+      text-decoration: none;
+      border: 1px solid var(--border);
+      padding: 0.6rem 1.4rem;
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-links a::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.2s;
+      z-index: -1;
+    }
+    .hero-links a:hover { color: var(--bg); border-color: var(--accent); }
+    .hero-links a:hover::after { transform: scaleX(1); }
+
+    .hero-edu {
+      margin-top: 4rem;
+      padding: 1.5rem 2rem;
+      border-left: 3px solid var(--accent);
+      background: var(--surface);
+      display: inline-block;
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards 0.7s;
+      transition: background 0.3s;
+    }
+    .hero-edu .school { font-family: var(--serif); font-size: 1.05rem; font-weight: 700; }
+    .hero-edu .degree { font-family: var(--mono); font-size: 0.75rem; color: var(--muted); margin-top: 0.3rem; }
+    .hero-edu .gpa { font-family: var(--mono); font-size: 0.72rem; color: var(--accent); margin-top: 0.25rem; }
+
+    /* SECTIONS */
+    section { padding: 6rem 3rem; max-width: 1100px; margin: 0 auto; }
+
+    .section-header { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 3.5rem; }
+    .section-num { font-family: var(--mono); font-size: 0.7rem; color: var(--accent); letter-spacing: 0.15em; }
+    .section-title { font-family: var(--serif); font-size: clamp(1.8rem, 3.5vw, 2.6rem); font-weight: 700; }
+    .section-line { flex: 1; height: 1px; background: var(--border); transition: background 0.3s; }
+
+    /* EXPERIENCE */
+    .exp-grid { display: flex; flex-direction: column; }
+
+    .exp-item {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 0 3rem;
+      padding: 2.5rem 0;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      transition: border-color 0.3s;
+    }
+
+    .exp-item::before {
+      content: '';
+      position: absolute;
+      left: 220px; top: 0; bottom: 0;
+      width: 1px;
+      background: var(--border);
+      transition: background 0.3s;
+    }
+
+    .exp-date { font-family: var(--mono); font-size: 0.7rem; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem; }
+    .exp-company { font-family: var(--serif); font-size: 0.9rem; color: var(--muted); }
+    .exp-location { font-family: var(--mono); font-size: 0.68rem; color: var(--muted); margin-top: 0.3rem; opacity: 0.6; }
+    .exp-body { padding-left: 3rem; }
+    .exp-role { font-family: var(--serif); font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; }
+
+    .exp-bullets { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+    .exp-bullets li { font-size: 0.88rem; color: var(--muted); padding-left: 1.2rem; position: relative; }
+    .exp-bullets li::before { content: '›'; position: absolute; left: 0; color: var(--accent); font-size: 1rem; }
+
+    /* PROJECTS GRID */
+    .proj-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+
+    .proj-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.25s, transform 0.25s, background 0.3s;
+    }
+
+    .proj-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s;
+    }
+
+    .proj-card:hover { border-color: rgba(232,197,71,0.35); transform: translateY(-4px); }
+    .proj-card:hover::before { transform: scaleX(1); }
+
+    .proj-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+    .proj-tag {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      background: rgba(91,140,255,0.1);
+      padding: 0.2rem 0.6rem;
+      border-radius: 2px;
+    }
+
+    .proj-name { font-family: var(--serif); font-size: 1.2rem; font-weight: 700; margin-bottom: 0.8rem; }
+    .proj-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.65; }
+    .proj-year { font-family: var(--mono); font-size: 0.68rem; color: var(--muted); margin-top: 1rem; opacity: 0.6; }
+
+    .proj-doc-link {
+      display: inline-block;
+      margin-top: 1rem;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.2s;
+    }
+    .proj-doc-link:hover { border-color: var(--accent); }
+
+    /* SKILLS */
+    .skills-wrapper { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; }
+    .skills-label { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; }
+    .skill-pill-list { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+    .skill-pill {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      color: var(--text);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 0.35rem 0.85rem;
+      transition: border-color 0.2s, color 0.2s, background 0.3s;
+    }
+    .skill-pill:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border);
+      text-align: center;
+      padding: 3rem;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--muted);
+      transition: border-color 0.3s;
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* RESPONSIVE */
+    @media (max-width: 720px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { gap: 1rem; }
+      .hero { padding: 7rem 1.5rem 4rem; }
+      section { padding: 4rem 1.5rem; }
+      .exp-item { grid-template-columns: 1fr; }
+      .exp-item::before { display: none; }
+      .exp-body { padding-left: 0; margin-top: 0.8rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-logo">Gary Ying</div>
+    <div class="nav-right">
+      <ul class="nav-links">
+        <li><a href="#experience">Experience</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="projects/index.html">Docs</a></li>
+        <li><a href="mailto:yinggarykairui@gmail.com">Contact</a></li>
+      </ul>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark mode">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5"/>
+          <line x1="12" y1="1" x2="12" y2="3"/>
+          <line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/>
+          <line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <div class="hero">
+    <div class="hero-bg-grid"></div>
+    <div class="hero-glow"></div>
+    <div class="hero-content">
+      <div class="hero-tag">Available for opportunities</div>
+      <h1 class="hero-name">Kairui <span>(Gary)</span><br>Ying</h1>
+      <p class="hero-title">Software Engineer &amp; AI Researcher</p>
+      <div class="hero-links">
+        <a href="mailto:yinggarykairui@gmail.com">Email Me</a>
+        <a href="https://github.com/yinggarykairui" target="_blank">GitHub</a>
+        <a href="https://linkedin.com/in/kairui-ying" target="_blank">LinkedIn</a>
+        <a href="projects/index.html">Project Docs →</a>
+      </div>
+      <div class="hero-edu">
+        <div class="school">University of California, Berkeley</div>
+        <div class="degree">B.A. Computer Science &amp; B.A. Analytics · Expected May 2027</div>
+        <div class="gpa">GPA: 3.94 / 4.00</div>
+      </div>
+    </div>
+  </div>
+
+  <section id="experience">
+    <div class="section-header reveal">
+      <span class="section-num">01</span>
+      <h2 class="section-title">Experience</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="exp-grid">
+
+      <div class="exp-item reveal">
+        <div class="exp-meta">
+          <div class="exp-date">Jun 2025 – Present</div>
+          <div class="exp-company">Mirai Copilot</div>
+          <div class="exp-location">San Diego, CA</div>
+        </div>
+        <div class="exp-body">
+          <div class="exp-role">Software Engineer</div>
+          <ul class="exp-bullets">
+            <li>Implemented vectorized Gaussian-elimination and eigenvalue algorithms in NumPy, improving computation speed by 40%.</li>
+            <li>Benchmarked optimized matrix operations and performed feature engineering for model pipelines, increasing predictive accuracy by &gt;30%.</li>
+            <li>Performed data preprocessing, feature engineering, and train/test evaluation, analyzing model accuracy, bias, and error distributions.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="exp-item reveal">
+        <div class="exp-meta">
+          <div class="exp-date">Sep 2024 – Oct 2025</div>
+          <div class="exp-company">U-M School of Public Health</div>
+          <div class="exp-location">Ann Arbor, MI</div>
+        </div>
+        <div class="exp-body">
+          <div class="exp-role">AI Research Assistant</div>
+          <ul class="exp-bullets">
+            <li>Developed a real-time color-deviance classifier using a CNN; optimized training loops to achieve &gt;95% accuracy with &lt;50 ms latency.</li>
+            <li>Implemented webcam-based inference with Python/OpenCV, including image preprocessing, contour detection, and prediction visualization.</li>
+            <li>Gained foundational experience in convolutional architectures, training loops, and model evaluation.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="exp-item reveal">
+        <div class="exp-meta">
+          <div class="exp-date">Aug 2023 – Present</div>
+          <div class="exp-company">Gobattle.io – Shinobit</div>
+          <div class="exp-location">Berkeley, CA</div>
+        </div>
+        <div class="exp-body">
+          <div class="exp-role">Game Developer</div>
+          <ul class="exp-bullets">
+            <li>Engineered a 2D browser-based MMO using JavaScript/HTML5, implementing real-time combat, collision detection, and platformer physics for 50,000+ players.</li>
+            <li>Built synchronous multiplayer systems supporting PvP, raids, and real-time state sync across web, iOS, and Android.</li>
+            <li>Developed AI enemies, new weapons, maps, and cosmetic systems, improving gameplay depth and engagement.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="exp-item reveal">
+        <div class="exp-meta">
+          <div class="exp-date">May 2024 – Present</div>
+          <div class="exp-company">PlatePromos</div>
+          <div class="exp-location">Encinitas, CA</div>
+        </div>
+        <div class="exp-body">
+          <div class="exp-role">CTO &amp; Co-Founder</div>
+          <ul class="exp-bullets">
+            <li>Designed and deployed PlatePromos.com using Python (Flask/Django) and AWS, serving 500+ students with 35+ local business partnerships.</li>
+            <li>Recognized by the Mayor of Encinitas and the California Senate for social impact; received a $1,000 award.</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section id="projects">
+    <div class="section-header reveal">
+      <span class="section-num">02</span>
+      <h2 class="section-title">Projects</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="proj-grid">
+
+      <div class="proj-card reveal">
+        <div class="proj-tags"><span class="proj-tag">Python</span><span class="proj-tag">Minimax</span><span class="proj-tag">AI</span></div>
+        <div class="proj-name">2048 Solver</div>
+        <p class="proj-desc">A 2048 AI solver using Minimax with weighted heuristics—empty tiles, monotonicity, smoothness, corner priority—achieving a &gt;98% win rate on a 4×4 board.</p>
+        <div class="proj-year">2026</div>
+        <a class="proj-doc-link" href="projects/index.html#solver">Read Docs →</a>
+      </div>
+
+      <div class="proj-card reveal">
+        <div class="proj-tags"><span class="proj-tag">Python</span><span class="proj-tag">TensorFlow</span><span class="proj-tag">OpenCV</span></div>
+        <div class="proj-name">Real-Time Gesture AI</div>
+        <p class="proj-desc">A webcam-based CNN system that processes live video frames and consistently defeats users in Rock–Paper–Scissors with real-time inference.</p>
+        <div class="proj-year">2025</div>
+        <a class="proj-doc-link" href="projects/index.html#gesture">Read Docs →</a>
+      </div>
+
+      <div class="proj-card reveal">
+        <div class="proj-tags"><span class="proj-tag">JavaScript</span><span class="proj-tag">HTML5</span><span class="proj-tag">Multiplayer</span></div>
+        <div class="proj-name">Gobattle.io MMO</div>
+        <p class="proj-desc">A 2D browser-based MMO with real-time combat, PvP raids, and cross-platform multiplayer played by 50,000+ users.</p>
+        <div class="proj-year">2023 – Present</div>
+        <a class="proj-doc-link" href="projects/index.html#gobattle">Read Docs →</a>
+      </div>
+
+      <div class="proj-card reveal">
+        <div class="proj-tags"><span class="proj-tag">Flask</span><span class="proj-tag">Django</span><span class="proj-tag">AWS</span></div>
+        <div class="proj-name">PlatePromos.com</div>
+        <p class="proj-desc">A student discount platform serving 500+ users and 35+ local businesses. Recognized by the Mayor of Encinitas and the California Senate.</p>
+        <div class="proj-year">2024 – Present</div>
+        <a class="proj-doc-link" href="projects/index.html#platepromos">Read Docs →</a>
+      </div>
+
+    </div>
+  </section>
+
+  <section id="skills">
+    <div class="section-header reveal">
+      <span class="section-num">03</span>
+      <h2 class="section-title">Skills</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="skills-wrapper">
+      <div class="skills-group reveal">
+        <div class="skills-label">Languages</div>
+        <div class="skill-pill-list">
+          <span class="skill-pill">Python</span><span class="skill-pill">JavaScript</span><span class="skill-pill">Java</span><span class="skill-pill">HTML/CSS</span>
+        </div>
+      </div>
+      <div class="skills-group reveal">
+        <div class="skills-label">Frameworks</div>
+        <div class="skill-pill-list">
+          <span class="skill-pill">React</span><span class="skill-pill">Flask</span><span class="skill-pill">Django</span><span class="skill-pill">TensorFlow</span><span class="skill-pill">NumPy</span><span class="skill-pill">OpenCV</span>
+        </div>
+      </div>
+      <div class="skills-group reveal">
+        <div class="skills-label">Tools &amp; Platforms</div>
+        <div class="skill-pill-list">
+          <span class="skill-pill">AWS</span><span class="skill-pill">Git</span><span class="skill-pill">GitHub</span>
+        </div>
+      </div>
+      <div class="skills-group reveal">
+        <div class="skills-label">Interests</div>
+        <div class="skill-pill-list">
+          <span class="skill-pill">Soccer</span><span class="skill-pill">Badminton</span><span class="skill-pill">Strategy Games</span><span class="skill-pill">Debate</span><span class="skill-pill">Fitness</span><span class="skill-pill">Piano</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>Kairui (Gary) Ying &nbsp;·&nbsp; <a href="mailto:yinggarykairui@gmail.com">yinggarykairui@gmail.com</a> &nbsp;·&nbsp; <a href="https://github.com/yinggarykairui">github.com/yinggarykairui</a></p>
+    <p style="margin-top:0.5rem;opacity:0.4;">Built with HTML &amp; CSS · Hosted on GitHub Pages</p>
+  </footer>
+
+  <script>
+    const html = document.documentElement;
+    const btn = document.getElementById('themeToggle');
+    const saved = localStorage.getItem('theme') || 'dark';
+    html.setAttribute('data-theme', saved);
+
+    btn.addEventListener('click', () => {
+      const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+    });
+
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          e.target.style.transitionDelay = (i % 4) * 0.08 + 's';
+          e.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.12 });
+    reveals.forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
