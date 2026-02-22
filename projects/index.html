@@ -7,406 +7,170 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --accent: #e8c547;
-      --accent2: #5b8cff;
+      --accent: #003262;
+      --accent2: #FDB515;
       --accent3: #5ecfa0;
       --accent4: #e8755b;
       --serif: 'Playfair Display', Georgia, serif;
       --mono: 'DM Mono', monospace;
       --sans: 'DM Sans', sans-serif;
     }
-
     [data-theme="dark"] {
-      --bg: #0b0c10;
-      --surface: #13141a;
-      --surface2: #191b24;
-      --border: #1f2130;
-      --text: #e8e9f0;
-      --muted: #6b6f85;
-      --code-bg: #0d0e14;
-      --nav-bg: rgba(11,12,16,0.88);
+      --bg: #0b0c10; --surface: #13141a; --surface2: #191b24;
+      --border: #1f2130; --text: #e8e9f0; --muted: #6b6f85;
+      --code-bg: #0d0e14; --nav-bg: rgba(11,12,16,0.88);
     }
-
     [data-theme="light"] {
-      --bg: #f5f4ef;
-      --surface: #eceae0;
-      --surface2: #e4e2d7;
-      --border: #d4d0c4;
-      --text: #1a1b22;
-      --muted: #7a7669;
-      --code-bg: #e2e0d5;
-      --nav-bg: rgba(245,244,239,0.88);
+      --bg: #f5f4ef; --surface: #eceae0; --surface2: #e4e2d7;
+      --border: #d4d0c4; --text: #1a1b22; --muted: #7a7669;
+      --code-bg: #e2e0d5; --nav-bg: rgba(245,244,239,0.88);
     }
-
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-
     body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--sans);
-      font-weight: 300;
-      line-height: 1.75;
-      overflow-x: hidden;
+      background: var(--bg); color: var(--text); font-family: var(--sans);
+      font-weight: 300; line-height: 1.75; overflow-x: hidden;
       transition: background 0.3s, color 0.3s;
-    }
-
-    body::before {
-      content: '';
-      position: fixed; inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-      pointer-events: none; z-index: 1000; opacity: 0.35;
     }
 
     /* NAV */
     nav {
-      position: sticky; top: 0; left: 0; right: 0; z-index: 100;
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
       display: flex; justify-content: space-between; align-items: center;
-      padding: 1.2rem 3rem;
-      background: var(--nav-bg);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
+      padding: 1.2rem 3rem; background: var(--nav-bg);
+      backdrop-filter: blur(12px); border-bottom: 1px solid var(--border);
       transition: background 0.3s, border-color 0.3s;
     }
-
-    .nav-logo { font-family: var(--serif); font-size: 1.1rem; color: var(--accent); text-decoration: none; }
+    .nav-logo {
+      font-family: var(--serif); font-size: 1.1rem; color: var(--accent2);
+      text-decoration: none; display: flex; align-items: center; gap: 0.5rem;
+    }
     .nav-right { display: flex; align-items: center; gap: 2rem; }
-
     .nav-links { display: flex; gap: 1.8rem; list-style: none; }
     .nav-links a {
-      font-family: var(--mono);
-      font-size: 0.75rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--muted);
-      text-decoration: none;
-      transition: color 0.2s;
+      font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s;
     }
-    .nav-links a:hover, .nav-links a.active { color: var(--accent); }
-
+    .nav-links a:hover, .nav-links a.active { color: var(--accent2); }
     .theme-toggle {
       background: none; border: 1px solid var(--border); cursor: pointer;
-      width: 36px; height: 36px;
-      display: flex; align-items: center; justify-content: center;
-      color: var(--muted);
-      transition: border-color 0.2s, color 0.2s;
+      width: 36px; height: 36px; display: flex; align-items: center;
+      justify-content: center; color: var(--muted); transition: border-color 0.2s, color 0.2s;
     }
-    .theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+    .theme-toggle:hover { border-color: var(--accent2); color: var(--accent2); }
     .theme-toggle svg { width: 16px; height: 16px; }
-    .icon-sun { display: none; }
-    .icon-moon { display: block; }
+    .icon-sun { display: none; } .icon-moon { display: block; }
     [data-theme="light"] .icon-sun { display: block; }
     [data-theme="light"] .icon-moon { display: none; }
 
-    /* PAGE LAYOUT */
+    /* LAYOUT */
     .page-wrap {
-      display: grid;
-      grid-template-columns: 240px 1fr;
-      gap: 0;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding-top: 5rem;
-      min-height: 100vh;
+      display: grid; grid-template-columns: 240px 1fr;
+      max-width: 1200px; margin: 0 auto; padding-top: 5rem; min-height: 100vh;
     }
 
     /* SIDEBAR */
     .sidebar {
-      position: sticky;
-      top: 5rem;
-      height: calc(100vh - 5rem);
-      overflow-y: auto;
-      padding: 3rem 2rem 3rem 3rem;
-      border-right: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
-      transition: border-color 0.3s;
+      position: sticky; top: 5rem; height: calc(100vh - 5rem); overflow-y: auto;
+      padding: 3rem 2rem 3rem 3rem; border-right: 1px solid var(--border);
+      display: flex; flex-direction: column; gap: 0.25rem;
     }
-
     .sidebar-heading {
-      font-family: var(--mono);
-      font-size: 0.65rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-top: 1.5rem;
-      margin-bottom: 0.5rem;
+      font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--muted);
+      margin-top: 1.5rem; margin-bottom: 0.5rem;
     }
-
     .sidebar-heading:first-child { margin-top: 0; }
-
     .sidebar a {
-      font-family: var(--mono);
-      font-size: 0.76rem;
-      color: var(--muted);
-      text-decoration: none;
-      padding: 0.3rem 0.6rem;
-      border-left: 2px solid transparent;
-      margin-left: -2px;
+      font-family: var(--mono); font-size: 0.76rem; color: var(--muted);
+      text-decoration: none; padding: 0.3rem 0.6rem;
+      border-left: 2px solid transparent; margin-left: -2px;
       transition: color 0.2s, border-color 0.2s;
     }
+    .sidebar a:hover, .sidebar a.active { color: var(--text); border-color: var(--accent2); }
 
-    .sidebar a:hover, .sidebar a.active {
-      color: var(--text);
-      border-color: var(--accent);
-    }
-
-    /* MAIN CONTENT */
-    .main-content {
-      padding: 3rem 4rem 6rem 4rem;
-    }
+    /* MAIN */
+    .main-content { padding: 3rem 4rem 6rem 4rem; }
 
     /* DOCS HERO */
-    .docs-hero {
-      margin-bottom: 5rem;
-      padding-bottom: 3rem;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .docs-breadcrumb {
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      color: var(--muted);
-      margin-bottom: 1.5rem;
-    }
-
-    .docs-breadcrumb a { color: var(--accent); text-decoration: none; }
+    .docs-hero { margin-bottom: 4rem; padding-bottom: 3rem; border-bottom: 1px solid var(--border); }
+    .docs-breadcrumb { font-family: var(--mono); font-size: 0.72rem; color: var(--muted); margin-bottom: 1.5rem; }
+    .docs-breadcrumb a { color: var(--accent2); text-decoration: none; }
     .docs-breadcrumb span { margin: 0 0.5rem; opacity: 0.4; }
-
-    .docs-hero h1 {
-      font-family: var(--serif);
-      font-size: clamp(2rem, 4vw, 3.2rem);
-      font-weight: 900;
-      line-height: 1.1;
-      margin-bottom: 1rem;
-    }
-
-    .docs-hero p {
-      font-size: 1rem;
-      color: var(--muted);
-      max-width: 560px;
-    }
+    .docs-hero h1 { font-family: var(--serif); font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 900; line-height: 1.1; margin-bottom: 1rem; }
+    .docs-hero p { font-size: 1rem; color: var(--muted); max-width: 560px; }
 
     /* PROJECT SECTIONS */
-    .proj-section {
-      margin-bottom: 6rem;
-      scroll-margin-top: 7rem;
-    }
-
+    .proj-section { margin-bottom: 6rem; scroll-margin-top: 7rem; }
     .proj-section-header {
-      display: flex;
-      align-items: flex-start;
-      gap: 1.5rem;
-      margin-bottom: 2.5rem;
-      padding-bottom: 1.5rem;
-      border-bottom: 1px solid var(--border);
+      display: flex; align-items: flex-start; gap: 1.5rem;
+      margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border);
     }
-
-    .proj-color-bar {
-      width: 4px;
-      height: 100%;
-      min-height: 60px;
-      flex-shrink: 0;
-      border-radius: 2px;
-    }
-
-    .proj-section-meta {}
-
-    .proj-section-num {
-      font-family: var(--mono);
-      font-size: 0.68rem;
-      color: var(--muted);
-      letter-spacing: 0.15em;
-      margin-bottom: 0.4rem;
-    }
-
-    .proj-section-title {
-      font-family: var(--serif);
-      font-size: clamp(1.5rem, 2.5vw, 2rem);
-      font-weight: 700;
-      line-height: 1.2;
-      margin-bottom: 0.6rem;
-    }
-
-    .proj-section-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-
-    .tag {
-      font-family: var(--mono);
-      font-size: 0.65rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      padding: 0.2rem 0.6rem;
-      border-radius: 2px;
-    }
-
-    .tag-blue { color: var(--accent2); background: rgba(91,140,255,0.1); }
-    .tag-gold { color: var(--accent); background: rgba(232,197,71,0.1); }
+    .proj-color-bar { width: 4px; min-height: 60px; flex-shrink: 0; border-radius: 2px; }
+    .proj-section-num { font-family: var(--mono); font-size: 0.68rem; color: var(--muted); letter-spacing: 0.15em; margin-bottom: 0.4rem; }
+    .proj-section-title { font-family: var(--serif); font-size: clamp(1.5rem, 2.5vw, 2rem); font-weight: 700; line-height: 1.2; margin-bottom: 0.6rem; }
+    .proj-section-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.8rem; }
+    .tag { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.2rem 0.6rem; border-radius: 2px; }
+    .tag-blue  { color: var(--accent);  background: rgba(0,50,98,0.12); }
+    .tag-gold  { color: var(--accent2); background: rgba(253,181,21,0.12); }
     .tag-green { color: var(--accent3); background: rgba(94,207,160,0.1); }
-    .tag-orange { color: var(--accent4); background: rgba(232,117,91,0.1); }
+    .tag-orange{ color: var(--accent4); background: rgba(232,117,91,0.1); }
+
+    .proj-live-btn {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--bg); background: var(--accent2);
+      padding: 0.4rem 1rem; text-decoration: none; transition: opacity 0.2s; margin-top: 0.3rem;
+    }
+    .proj-live-btn:hover { opacity: 0.85; }
+    .proj-live-btn svg { width: 11px; height: 11px; }
 
     /* DOC BLOCKS */
-    .doc-block {
-      margin-bottom: 2.5rem;
-    }
+    .doc-block { margin-bottom: 2.5rem; }
+    .doc-block h3 { font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent2); margin-bottom: 1rem; }
+    .doc-block p { font-size: 0.92rem; color: var(--muted); line-height: 1.8; margin-bottom: 0.8rem; }
+    .doc-block p strong { color: var(--text); font-weight: 500; }
 
-    .doc-block h3 {
-      font-family: var(--mono);
-      font-size: 0.75rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 1rem;
-    }
+    /* STATS */
+    .stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+    .stat-box { background: var(--surface); border: 1px solid var(--border); padding: 1.2rem 1.4rem; }
+    .stat-val { font-family: var(--serif); font-size: 1.8rem; font-weight: 700; line-height: 1; margin-bottom: 0.3rem; }
+    .stat-label { font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
 
-    .doc-block p {
-      font-size: 0.92rem;
-      color: var(--muted);
-      line-height: 1.8;
-      margin-bottom: 0.8rem;
-    }
-
-    .doc-block p strong {
-      color: var(--text);
-      font-weight: 500;
-    }
-
-    /* STAT ROW */
-    .stat-row {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 1rem;
-      margin: 1.5rem 0;
-    }
-
-    .stat-box {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      padding: 1.2rem 1.4rem;
-      transition: background 0.3s, border-color 0.3s;
-    }
-
-    .stat-val {
-      font-family: var(--serif);
-      font-size: 1.8rem;
-      font-weight: 700;
-      line-height: 1;
-      margin-bottom: 0.3rem;
-    }
-
-    .stat-label {
-      font-family: var(--mono);
-      font-size: 0.66rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-
-    /* CODE BLOCK */
+    /* CODE */
     .code-block {
-      background: var(--code-bg);
-      border: 1px solid var(--border);
-      border-left: 3px solid var(--accent);
-      padding: 1.4rem 1.6rem;
-      margin: 1.2rem 0;
-      overflow-x: auto;
-      transition: background 0.3s;
+      background: var(--code-bg); border: 1px solid var(--border);
+      border-left: 3px solid var(--accent2); padding: 1.4rem 1.6rem;
+      margin: 1.2rem 0; overflow-x: auto;
     }
+    .code-block pre { font-family: var(--mono); font-size: 0.8rem; line-height: 1.7; color: var(--text); white-space: pre; }
+    .cc { color: var(--muted); }
+    .ck { color: var(--accent2); }
+    .cs { color: var(--accent3); }
+    .cf { color: #e8a55b; }
 
-    .code-block pre {
-      font-family: var(--mono);
-      font-size: 0.8rem;
-      line-height: 1.7;
-      color: var(--text);
-    }
-
-    .code-comment { color: var(--muted); }
-    .code-keyword { color: var(--accent2); }
-    .code-string { color: var(--accent3); }
-    .code-number { color: var(--accent); }
-    .code-fn { color: #e8a55b; }
-
-    /* ARCHITECTURE DIAGRAM */
+    /* ARCH DIAGRAM */
     .arch-diagram {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      padding: 2rem;
-      margin: 1.5rem 0;
-      font-family: var(--mono);
-      font-size: 0.78rem;
-      line-height: 2;
-      color: var(--muted);
-      transition: background 0.3s;
+      background: var(--surface); border: 1px solid var(--border);
+      padding: 1.5rem 2rem; margin: 1.5rem 0; font-family: var(--mono); font-size: 0.78rem;
     }
+    .flow-step { display: flex; align-items: center; gap: 0.8rem; padding: 0.4rem 0; flex-wrap: wrap; }
+    .step-box { background: var(--surface2); border: 1px solid var(--border); padding: 0.4rem 0.8rem; color: var(--text); white-space: nowrap; }
+    .step-arrow { color: var(--accent2); }
 
-    .arch-diagram .flow-step {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      padding: 0.5rem 0;
-    }
-
-    .arch-diagram .step-box {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      padding: 0.4rem 1rem;
-      color: var(--text);
-      white-space: nowrap;
-      transition: background 0.3s;
-    }
-
-    .arch-diagram .step-arrow {
-      color: var(--accent);
-      font-size: 1rem;
-    }
-
-    /* CHALLENGE CARD */
+    /* CHALLENGE LIST */
     .challenge-list { display: flex; flex-direction: column; gap: 0.8rem; margin: 1rem 0; }
-
-    .challenge-item {
-      display: flex;
-      gap: 1rem;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      padding: 1rem 1.2rem;
-      transition: background 0.3s;
-    }
-
-    .challenge-icon {
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      color: var(--accent);
-      flex-shrink: 0;
-      margin-top: 0.1rem;
-    }
-
+    .challenge-item { display: flex; gap: 1rem; background: var(--surface); border: 1px solid var(--border); padding: 1rem 1.2rem; }
+    .challenge-icon { font-family: var(--mono); font-size: 0.72rem; color: var(--accent2); flex-shrink: 0; margin-top: 0.1rem; }
     .challenge-text { font-size: 0.88rem; color: var(--muted); }
     .challenge-text strong { color: var(--text); font-weight: 500; }
 
-    /* DIVIDER */
-    .section-divider {
-      height: 1px;
-      background: linear-gradient(90deg, var(--accent), transparent);
-      margin: 5rem 0;
-      opacity: 0.3;
-    }
+    .section-divider { height: 1px; background: linear-gradient(90deg, var(--accent2), transparent); margin: 5rem 0; opacity: 0.25; }
 
     /* FOOTER */
-    footer {
-      border-top: 1px solid var(--border);
-      text-align: center;
-      padding: 3rem;
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      color: var(--muted);
-    }
+    footer { border-top: 1px solid var(--border); text-align: center; padding: 3rem; font-family: var(--mono); font-size: 0.72rem; color: var(--muted); }
+    footer a { color: var(--accent2); text-decoration: none; }
 
-    footer a { color: var(--accent); text-decoration: none; }
-
-    /* REVEAL */
-    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
-    .reveal.visible { opacity: 1; transform: translateY(0); }
-
-    /* RESPONSIVE */
     @media (max-width: 860px) {
       .page-wrap { grid-template-columns: 1fr; }
       .sidebar { display: none; }
@@ -419,7 +183,12 @@
 <body>
 
   <nav>
-    <a class="nav-logo" href="../index.html">Gary Ying</a>
+    <a class="nav-logo" href="../index.html">
+      <svg height="18" width="18" viewBox="0 0 16 16" fill="currentColor" style="color:var(--accent2);">
+        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+      </svg>
+      Gary Ying
+    </a>
     <div class="nav-right">
       <ul class="nav-links">
         <li><a href="../index.html#experience">Experience</a></li>
@@ -443,273 +212,272 @@
     </div>
   </nav>
 
-  <div class="page-wrap" style="margin-top: -80px;">
-
-    <!-- SIDEBAR -->
+  <div class="page-wrap">
     <aside class="sidebar">
       <div class="sidebar-heading">Projects</div>
+      <a href="#meetwise">MeetWise</a>
+      <a href="#snakes">Instagram Snake Detector</a>
       <a href="#solver">2048 AI Solver</a>
       <a href="#gesture">Gesture AI</a>
       <a href="#gobattle">Gobattle.io MMO</a>
       <a href="#platepromos">PlatePromos</a>
-
-      <div class="sidebar-heading">Sections</div>
-      <a href="#solver">Overview</a>
-      <a href="#solver-arch">Architecture</a>
-      <a href="#solver-algo">Algorithm</a>
-      <a href="#gesture">Gesture Model</a>
-      <a href="#gesture-pipeline">Pipeline</a>
-      <a href="#gobattle">Game Systems</a>
-      <a href="#gobattle-net">Networking</a>
-      <a href="#platepromos">Platform</a>
-      <a href="#platepromos-stack">Tech Stack</a>
     </aside>
 
-    <!-- MAIN -->
     <main class="main-content">
 
-      <!-- HERO -->
-      <div class="docs-hero reveal">
+      <div class="docs-hero">
         <div class="docs-breadcrumb">
-          <a href="../index.html">Gary Ying</a>
-          <span>/</span>
-          Project Documentation
+          <a href="../index.html">Gary Ying</a> <span>/</span> Project Documentation
         </div>
         <h1>Project<br>Documentation</h1>
-        <p>Deep technical dives into each project — architecture decisions, algorithms, challenges, and lessons learned.</p>
+        <p>Technical deep-dives into architecture, algorithms, and engineering decisions behind each project.</p>
       </div>
 
-      <!-- ─────────────────── 2048 SOLVER ─────────────────── -->
-      <section class="proj-section reveal" id="solver">
+      <!-- MEETWISE -->
+      <section class="proj-section" id="meetwise">
         <div class="proj-section-header">
-          <div class="proj-color-bar" style="background: var(--accent);"></div>
+          <div class="proj-color-bar" style="background:var(--accent2);"></div>
           <div class="proj-section-meta">
             <div class="proj-section-num">Project 01 · 2026</div>
-            <div class="proj-section-title">2048 AI Solver</div>
+            <div class="proj-section-title">MeetWise — AI Scheduling Platform</div>
             <div class="proj-section-tags">
-              <span class="tag tag-gold">Python</span>
-              <span class="tag tag-gold">Minimax</span>
-              <span class="tag tag-blue">AI</span>
-              <span class="tag tag-blue">Game Theory</span>
+              <span class="tag tag-gold">Node.js</span>
+              <span class="tag tag-gold">Cloudflare Workers</span>
+              <span class="tag tag-blue">Claude API</span>
+              <span class="tag tag-green">Google OAuth2</span>
             </div>
+            <a class="proj-live-btn" href="https://stately-crumble-1391cb.netlify.app/" target="_blank">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              View Live Site
+            </a>
           </div>
         </div>
 
         <div class="doc-block">
           <h3>Overview</h3>
-          <p>An autonomous solver for the 2048 puzzle game using the <strong>Expectimax algorithm</strong> — a variant of Minimax suited for stochastic environments. The solver models the game as an adversarial two-player game: the AI moves to maximize score, while the "opponent" (random tile spawner) places tiles in the worst possible positions.</p>
-          <p>The key insight is that 2048 is not purely adversarial — tiles spawn randomly — so pure Minimax would be overly pessimistic. Expectimax replaces the minimizer with a <strong>chance node</strong> that computes the expected value across all possible tile placements, weighted by their probability (90% for a "2" tile, 10% for a "4" tile).</p>
+          <p>MeetWise is a production AI scheduling platform that automates calendar conflict detection and meeting booking. It integrates Google OAuth2 and freeBusy APIs for real-time availability, routes AI calls through a Cloudflare Worker proxy to Claude API, and pulls live weather data from Open-Meteo to generate context-aware itineraries. Scheduling time reduced from ~10 minutes to under 1 minute.</p>
         </div>
 
         <div class="stat-row">
-          <div class="stat-box">
-            <div class="stat-val" style="color:var(--accent);">&gt;98%</div>
-            <div class="stat-label">Win Rate (4×4)</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-val" style="color:var(--accent2);">4</div>
-            <div class="stat-label">Heuristic Factors</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-val" style="color:var(--accent3);">3–5</div>
-            <div class="stat-label">Search Depth</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-val" style="color:var(--accent4);">2048+</div>
-            <div class="stat-label">Tile Achieved</div>
-          </div>
+          <div class="stat-box"><div class="stat-val" style="color:var(--accent2);">&lt;1min</div><div class="stat-label">Scheduling Time</div></div>
+          <div class="stat-box"><div class="stat-val" style="color:var(--accent2);">10x</div><div class="stat-label">Faster than Manual</div></div>
+          <div class="stat-box"><div class="stat-val" style="color:var(--accent3);">Live</div><div class="stat-label">Production Deploy</div></div>
+          <div class="stat-box"><div class="stat-val" style="color:var(--accent4);">Edge</div><div class="stat-label">Cloudflare Network</div></div>
         </div>
 
-        <div class="doc-block" id="solver-arch">
+        <div class="doc-block">
           <h3>Architecture</h3>
           <div class="arch-diagram">
-            <div class="flow-step">
-              <span class="step-box">Game State (4×4 grid)</span>
-              <span class="step-arrow">→</span>
-              <span class="step-box">Expectimax Tree</span>
-            </div>
-            <div class="flow-step" style="padding-left:2rem;">
-              <span class="step-box">AI Node (MAX)</span>
-              <span class="step-arrow">→</span>
-              <span class="step-box">4 possible moves</span>
-            </div>
-            <div class="flow-step" style="padding-left:2rem;">
-              <span class="step-box">Chance Node (EXP)</span>
-              <span class="step-arrow">→</span>
-              <span class="step-box">Weighted avg of tile placements</span>
-            </div>
-            <div class="flow-step">
-              <span class="step-box">Heuristic Evaluation</span>
-              <span class="step-arrow">→</span>
-              <span class="step-box">Best Move Selected</span>
-            </div>
+            <div class="flow-step"><span class="step-box">User Login</span><span class="step-arrow">→</span><span class="step-box">Google OAuth2</span><span class="step-arrow">→</span><span class="step-box">freeBusy API</span></div>
+            <div class="flow-step"><span class="step-box">Availability Slots + Weather</span><span class="step-arrow">→</span><span class="step-box">Cloudflare Worker</span><span class="step-arrow">→</span><span class="step-box">Claude API</span></div>
+            <div class="flow-step"><span class="step-box">AI Itinerary</span><span class="step-arrow">→</span><span class="step-box">Rendered to User (Netlify)</span></div>
           </div>
         </div>
 
-        <div class="doc-block" id="solver-algo">
-          <h3>Heuristic Function</h3>
-          <p>At leaf nodes the board is evaluated using a weighted sum of four heuristics:</p>
+        <div class="doc-block">
+          <h3>Key Engineering Decisions</h3>
+          <div class="challenge-list">
+            <div class="challenge-item">
+              <span class="challenge-icon">▸</span>
+              <span class="challenge-text"><strong>Cloudflare Worker as proxy:</strong> Keeps the Claude API key off the client entirely. All AI requests are validated and forwarded server-side at the edge with no cold start latency.</span>
+            </div>
+            <div class="challenge-item">
+              <span class="challenge-icon">▸</span>
+              <span class="challenge-text"><strong>freeBusy API for privacy:</strong> Only free/busy time blocks are queried — not full event details — giving the AI enough to find open slots without exposing private calendar data.</span>
+            </div>
+            <div class="challenge-item">
+              <span class="challenge-icon">▸</span>
+              <span class="challenge-text"><strong>Weather-aware itineraries:</strong> Open-Meteo forecast data is injected into the Claude prompt so suggestions account for indoor vs. outdoor conditions on the meeting day.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- INSTAGRAM SNAKE DETECTOR -->
+      <section class="proj-section" id="snakes">
+        <div class="proj-section-header">
+          <div class="proj-color-bar" style="background:var(--accent3);"></div>
+          <div class="proj-section-meta">
+            <div class="proj-section-num">Project 02 · 2026</div>
+            <div class="proj-section-title">Instagram Snake Detector</div>
+            <div class="proj-section-tags">
+              <span class="tag tag-green">JavaScript</span>
+              <span class="tag tag-green">File API</span>
+              <span class="tag tag-blue">Instagram</span>
+            </div>
+            <a class="proj-live-btn" href="https://deft-alpaca-fcead4.netlify.app/" target="_blank">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              View Live Site
+            </a>
+          </div>
+        </div>
+
+        <div class="doc-block">
+          <h3>Overview</h3>
+          <p>Instagram Snake Detector identifies <strong>"snakes"</strong> — people you follow on Instagram who don't follow you back. The user drags and drops their Instagram data export files (<strong>followers_1.html</strong> and <strong>following.html</strong>) into the UI, which parses them entirely client-side, computes the difference, and displays the full snake list instantly.</p>
+          <p>The tool then generates a ready-to-run <strong>JavaScript console script</strong> the user can paste into Instagram's browser DevTools to automatically unfollow every snake — no manual clicking through hundreds of profiles required. No backend, no server, no data leaves the device.</p>
+        </div>
+
+        <div class="doc-block">
+          <h3>How It Works</h3>
           <div class="challenge-list">
             <div class="challenge-item">
               <span class="challenge-icon">01</span>
-              <span class="challenge-text"><strong>Empty Tiles:</strong> More empty cells = more moves available. Logarithmically weighted to reward boards with many open squares.</span>
+              <span class="challenge-text"><strong>Export Instagram data:</strong> The user downloads their data archive from Instagram settings under "Your Activity &gt; Download your information", which includes followers_1.html and following.html.</span>
             </div>
             <div class="challenge-item">
               <span class="challenge-icon">02</span>
-              <span class="challenge-text"><strong>Monotonicity:</strong> Tiles should decrease in value in a consistent direction (e.g., top-left to bottom-right), keeping the largest tile in a corner.</span>
+              <span class="challenge-text"><strong>Drag and drop:</strong> Both files are dragged into separate drop zones in the UI. The browser's File API reads them locally — nothing is uploaded to any server.</span>
             </div>
             <div class="challenge-item">
               <span class="challenge-icon">03</span>
-              <span class="challenge-text"><strong>Smoothness:</strong> Penalizes large value differences between adjacent tiles, which would require many merges to resolve.</span>
+              <span class="challenge-text"><strong>Snake detection:</strong> Both HTML files are parsed to extract usernames. A set difference is computed — anyone in <em>following</em> but not in <em>followers</em> is flagged as a snake and shown in the list.</span>
             </div>
             <div class="challenge-item">
               <span class="challenge-icon">04</span>
-              <span class="challenge-text"><strong>Corner Priority:</strong> The highest-value tile earns bonus points if it occupies a corner position, enabling better merge chains.</span>
+              <span class="challenge-text"><strong>Console script:</strong> A JavaScript snippet is generated for the user to copy and paste into Instagram's browser console, which automates unfollowing each snake without touching any private API.</span>
             </div>
           </div>
+        </div>
 
+        <div class="doc-block">
+          <h3>Core Logic</h3>
           <div class="code-block">
-            <pre><span class="code-comment"># Heuristic evaluation function</span>
-<span class="code-keyword">def</span> <span class="code-fn">evaluate</span>(board):
-    empty    = <span class="code-fn">count_empty</span>(board) * <span class="code-number">2.7</span>
-    mono     = <span class="code-fn">monotonicity</span>(board) * <span class="code-number">1.0</span>
-    smooth   = <span class="code-fn">smoothness</span>(board) * <span class="code-number">0.1</span>
-    corner   = <span class="code-fn">max_corner_bonus</span>(board) * <span class="code-number">1.0</span>
-    <span class="code-keyword">return</span> empty + mono + smooth + corner
+<pre><span class="cc">// Parse usernames out of Instagram's exported HTML file</span>
+<span class="ck">function</span> <span class="cf">parseUsernames</span>(htmlText) {
+  <span class="ck">const</span> doc = <span class="ck">new</span> DOMParser().<span class="cf">parseFromString</span>(htmlText, <span class="cs">'text/html'</span>);
+  <span class="ck">return new</span> Set(
+    [...doc.<span class="cf">querySelectorAll</span>(<span class="cs">'a'</span>)].<span class="cf">map</span>(a => a.textContent.<span class="cf">trim</span>())
+  );
+}
 
-<span class="code-comment"># Expectimax with depth limit</span>
-<span class="code-keyword">def</span> <span class="code-fn">expectimax</span>(board, depth, is_ai_turn):
-    <span class="code-keyword">if</span> depth == <span class="code-number">0</span> <span class="code-keyword">or</span> <span class="code-fn">game_over</span>(board):
-        <span class="code-keyword">return</span> <span class="code-fn">evaluate</span>(board)
+<span class="cc">// Snakes = people you follow who don't follow back</span>
+<span class="ck">const</span> snakes = [...following].<span class="cf">filter</span>(u => !followers.<span class="cf">has</span>(u));
 
-    <span class="code-keyword">if</span> is_ai_turn:  <span class="code-comment"># MAX node</span>
-        best = <span class="code-fn">max</span>(<span class="code-fn">expectimax</span>(<span class="code-fn">move</span>(board, d), depth-<span class="code-number">1</span>, <span class="code-keyword">False</span>)
-                    <span class="code-keyword">for</span> d <span class="code-keyword">in</span> [UP, DOWN, LEFT, RIGHT])
-        <span class="code-keyword">return</span> best
-    <span class="code-keyword">else</span>:           <span class="code-comment"># CHANCE node</span>
-        <span class="code-keyword">return</span> <span class="code-fn">weighted_avg_over_empty_cells</span>(board, depth)</pre>
+<span class="cc">// Display results and generate the unfollow console script</span>
+<span class="cf">displaySnakes</span>(snakes);
+<span class="cf">generateScript</span>(snakes);</pre>
           </div>
+        </div>
+
+        <div class="doc-block">
+          <h3>Privacy</h3>
+          <p>100% client-side — no server, no database, no accounts needed. Files are read locally and never transmitted. The generated script runs directly against Instagram's web UI using no third-party APIs or credentials.</p>
         </div>
       </section>
 
       <div class="section-divider"></div>
 
-      <!-- ─────────────────── GESTURE AI ─────────────────── -->
-      <section class="proj-section reveal" id="gesture">
+      <!-- 2048 SOLVER -->
+      <section class="proj-section" id="solver">
         <div class="proj-section-header">
-          <div class="proj-color-bar" style="background: var(--accent2);"></div>
+          <div class="proj-color-bar" style="background:var(--accent2);"></div>
           <div class="proj-section-meta">
-            <div class="proj-section-num">Project 02 · 2025</div>
-            <div class="proj-section-title">Real-Time Gesture AI</div>
+            <div class="proj-section-num">Project 03 · 2026</div>
+            <div class="proj-section-title">2048 AI Solver</div>
             <div class="proj-section-tags">
-              <span class="tag tag-blue">Python</span>
-              <span class="tag tag-blue">TensorFlow</span>
-              <span class="tag tag-green">OpenCV</span>
-              <span class="tag tag-green">CNN</span>
+              <span class="tag tag-gold">Python</span>
+              <span class="tag tag-gold">NumPy</span>
+              <span class="tag tag-blue">Minimax</span>
+              <span class="tag tag-blue">Heuristic Search</span>
             </div>
           </div>
         </div>
 
         <div class="doc-block">
           <h3>Overview</h3>
-          <p>A real-time computer vision system that watches a webcam feed, recognizes hand gestures (Rock, Paper, or Scissors), and plays the optimal counter-move. The system uses a <strong>convolutional neural network</strong> trained on a custom dataset of hand gesture images.</p>
-          <p>The pipeline processes each video frame in under 50 ms — fast enough for real-time gameplay at 30 fps — using optimized OpenCV preprocessing before feeding frames into the TensorFlow model.</p>
+          <p>An autonomous solver for 2048 using the <strong>Expectimax algorithm</strong> — a Minimax variant for stochastic environments. The AI maximizes score while random tile spawns are modeled as chance nodes computing expected values. Validated across <strong>10,000+ simulation runs</strong> with a &gt;98% win rate.</p>
         </div>
 
         <div class="stat-row">
-          <div class="stat-box">
-            <div class="stat-val" style="color:var(--accent2);">&lt;50ms</div>
-            <div class="stat-label">Inference Latency</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-val" style="color:var(--accent);">&gt;95%</div>
-            <div class="stat-label">Classification Accuracy</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-val" style="color:var(--accent3);">3</div>
-            <div class="stat-label">Gesture Classes</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-val" style="color:var(--accent4);">30fps</div>
-            <div class="stat-label">Real-Time Processing</div>
-          </div>
-        </div>
-
-        <div class="doc-block" id="gesture-pipeline">
-          <h3>Inference Pipeline</h3>
-          <div class="arch-diagram">
-            <div class="flow-step">
-              <span class="step-box">Webcam Frame (BGR)</span>
-              <span class="step-arrow">→</span>
-              <span class="step-box">Grayscale + Blur</span>
-            </div>
-            <div class="flow-step">
-              <span class="step-box">Contour Detection</span>
-              <span class="step-arrow">→</span>
-              <span class="step-box">ROI Crop + Resize (64×64)</span>
-            </div>
-            <div class="flow-step">
-              <span class="step-box">Normalize [0, 1]</span>
-              <span class="step-arrow">→</span>
-              <span class="step-box">CNN Inference</span>
-            </div>
-            <div class="flow-step">
-              <span class="step-box">Softmax Output</span>
-              <span class="step-arrow">→</span>
-              <span class="step-box">Predicted Gesture + Counter-Move</span>
-            </div>
-          </div>
+          <div class="stat-box"><div class="stat-val" style="color:var(--accent2);">&gt;98%</div><div class="stat-label">Win Rate</div></div>
+          <div class="stat-box"><div class="stat-val" style="color:var(--accent2);">10K+</div><div class="stat-label">Simulations</div></div>
+          <div class="stat-box"><div class="stat-val" style="color:var(--accent3);">4</div><div class="stat-label">Heuristics</div></div>
+          <div class="stat-box"><div class="stat-val" style="color:var(--accent4);">3–5</div><div class="stat-label">Search Depth</div></div>
         </div>
 
         <div class="doc-block">
-          <h3>Model Architecture</h3>
-          <div class="code-block">
-            <pre><span class="code-comment"># CNN model (TensorFlow / Keras)</span>
-model = Sequential([
-    <span class="code-fn">Conv2D</span>(<span class="code-number">32</span>, (<span class="code-number">3</span>,<span class="code-number">3</span>), activation=<span class="code-string">'relu'</span>, input_shape=(<span class="code-number">64</span>,<span class="code-number">64</span>,<span class="code-number">1</span>)),
-    <span class="code-fn">MaxPooling2D</span>(<span class="code-number">2</span>,<span class="code-number">2</span>),
-    <span class="code-fn">Conv2D</span>(<span class="code-number">64</span>, (<span class="code-number">3</span>,<span class="code-number">3</span>), activation=<span class="code-string">'relu'</span>),
-    <span class="code-fn">MaxPooling2D</span>(<span class="code-number">2</span>,<span class="code-number">2</span>),
-    <span class="code-fn">Flatten</span>(),
-    <span class="code-fn">Dense</span>(<span class="code-number">128</span>, activation=<span class="code-string">'relu'</span>),
-    <span class="code-fn">Dropout</span>(<span class="code-number">0.5</span>),
-    <span class="code-fn">Dense</span>(<span class="code-number">3</span>, activation=<span class="code-string">'softmax'</span>)  <span class="code-comment"># rock, paper, scissors</span>
-])</pre>
-          </div>
-        </div>
-
-        <div class="doc-block">
-          <h3>Key Challenges</h3>
+          <h3>Heuristics</h3>
           <div class="challenge-list">
-            <div class="challenge-item">
-              <span class="challenge-icon">!</span>
-              <span class="challenge-text"><strong>Background Noise:</strong> Webcam frames contain complex backgrounds. Solved using adaptive thresholding and skin-tone HSV masking to isolate the hand region.</span>
-            </div>
-            <div class="challenge-item">
-              <span class="challenge-icon">!</span>
-              <span class="challenge-text"><strong>Latency:</strong> Initial pipeline exceeded 100ms per frame. Resolved by resizing frames early, batching preprocessing, and running inference on CPU with TensorFlow Lite.</span>
-            </div>
-            <div class="challenge-item">
-              <span class="challenge-icon">!</span>
-              <span class="challenge-text"><strong>Overfitting:</strong> Early model performed well on training data but poorly on live webcam input. Fixed with aggressive data augmentation (rotation, flipping, brightness shifts) and Dropout layers.</span>
-            </div>
+            <div class="challenge-item"><span class="challenge-icon">01</span><span class="challenge-text"><strong>Empty Tiles:</strong> More empty cells = more future moves. Logarithmically weighted.</span></div>
+            <div class="challenge-item"><span class="challenge-icon">02</span><span class="challenge-text"><strong>Monotonicity:</strong> Values decrease consistently in one direction, keeping the largest tile in a corner.</span></div>
+            <div class="challenge-item"><span class="challenge-icon">03</span><span class="challenge-text"><strong>Smoothness:</strong> Penalizes large value differences between adjacent tiles.</span></div>
+            <div class="challenge-item"><span class="challenge-icon">04</span><span class="challenge-text"><strong>Corner Priority:</strong> Bonus if the highest tile is in a corner, enabling better merge chains.</span></div>
+          </div>
+          <div class="code-block">
+<pre><span class="ck">def</span> <span class="cf">evaluate</span>(board):
+    empty  = <span class="cf">count_empty</span>(board) * <span class="cs">2.7</span>
+    mono   = <span class="cf">monotonicity</span>(board) * <span class="cs">1.0</span>
+    smooth = <span class="cf">smoothness</span>(board)  * <span class="cs">0.1</span>
+    corner = <span class="cf">max_corner_bonus</span>(board) * <span class="cs">1.0</span>
+    <span class="ck">return</span> empty + mono + smooth + corner</pre>
           </div>
         </div>
       </section>
 
       <div class="section-divider"></div>
 
-      <!-- ─────────────────── GOBATTLE ─────────────────── -->
-      <section class="proj-section reveal" id="gobattle">
+      <!-- GESTURE AI -->
+      <section class="proj-section" id="gesture">
         <div class="proj-section-header">
-          <div class="proj-color-bar" style="background: var(--accent3);"></div>
+          <div class="proj-color-bar" style="background:var(--accent3);"></div>
           <div class="proj-section-meta">
-            <div class="proj-section-num">Project 03 · 2023 – Present</div>
+            <div class="proj-section-num">Project 04 · 2025</div>
+            <div class="proj-section-title">Real-Time Gesture AI</div>
+            <div class="proj-section-tags">
+              <span class="tag tag-green">TensorFlow</span>
+              <span class="tag tag-green">OpenCV</span>
+              <span class="tag tag-blue">CNN</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="doc-block">
+          <h3>Overview</h3>
+          <p>A real-time computer vision system that watches a webcam feed, recognizes Rock/Paper/Scissors hand gestures using a trained CNN, and plays the winning counter-move — all at under 50 ms latency per frame.</p>
+        </div>
+
+        <div class="stat-row">
+          <div class="stat-box"><div class="stat-val" style="color:var(--accent2);">&lt;50ms</div><div class="stat-label">Inference Latency</div></div>
+          <div class="stat-box"><div class="stat-val" style="color:var(--accent2);">&gt;95%</div><div class="stat-label">Accuracy</div></div>
+          <div class="stat-box"><div class="stat-val" style="color:var(--accent3);">3</div><div class="stat-label">Gesture Classes</div></div>
+          <div class="stat-box"><div class="stat-val" style="color:var(--accent4);">30fps</div><div class="stat-label">Processing Rate</div></div>
+        </div>
+
+        <div class="doc-block">
+          <h3>Inference Pipeline</h3>
+          <div class="arch-diagram">
+            <div class="flow-step"><span class="step-box">Webcam Frame</span><span class="step-arrow">→</span><span class="step-box">Grayscale + Blur</span><span class="step-arrow">→</span><span class="step-box">Contour Detection</span></div>
+            <div class="flow-step"><span class="step-box">ROI Crop 64x64</span><span class="step-arrow">→</span><span class="step-box">Normalize</span><span class="step-arrow">→</span><span class="step-box">CNN Inference</span></div>
+            <div class="flow-step"><span class="step-box">Softmax Output</span><span class="step-arrow">→</span><span class="step-box">Gesture + Counter-Move Displayed</span></div>
+          </div>
+        </div>
+
+        <div class="doc-block">
+          <h3>Challenges</h3>
+          <div class="challenge-list">
+            <div class="challenge-item"><span class="challenge-icon">!</span><span class="challenge-text"><strong>Background noise:</strong> Solved with adaptive thresholding and HSV skin-tone masking to isolate hand regions.</span></div>
+            <div class="challenge-item"><span class="challenge-icon">!</span><span class="challenge-text"><strong>Latency:</strong> Early pipeline exceeded 100ms. Fixed by early resizing, batched preprocessing, and TensorFlow Lite inference.</span></div>
+            <div class="challenge-item"><span class="challenge-icon">!</span><span class="challenge-text"><strong>Overfitting:</strong> Resolved with data augmentation (rotation, flipping, brightness shifts) and Dropout layers.</span></div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- GOBATTLE -->
+      <section class="proj-section" id="gobattle">
+        <div class="proj-section-header">
+          <div class="proj-color-bar" style="background:var(--accent4);"></div>
+          <div class="proj-section-meta">
+            <div class="proj-section-num">Project 05 · 2023 – Present</div>
             <div class="proj-section-title">Gobattle.io MMO</div>
             <div class="proj-section-tags">
-              <span class="tag tag-green">JavaScript</span>
-              <span class="tag tag-green">HTML5 Canvas</span>
-              <span class="tag tag-blue">Multiplayer</span>
+              <span class="tag tag-orange">JavaScript</span>
+              <span class="tag tag-orange">HTML5 Canvas</span>
+              <span class="tag tag-blue">WebSockets</span>
               <span class="tag tag-gold">50K+ Players</span>
             </div>
           </div>
@@ -717,82 +485,37 @@ model = Sequential([
 
         <div class="doc-block">
           <h3>Overview</h3>
-          <p>A 2D browser-based massively multiplayer online game (MMO) built entirely in JavaScript with HTML5 Canvas. The game features real-time combat, platformer physics, PvP, and AI-controlled enemies — all synchronized across web, iOS, and Android clients.</p>
-          <p>The game has grown to a playerbase of <strong>50,000+ users</strong>, requiring architecture decisions that prioritize performance and synchronization correctness under load.</p>
+          <p>A 2D browser-based MMO built in JavaScript and HTML5 Canvas with real-time combat, platformer physics, PvP raids, and AI enemies — synchronized across web, iOS, and Android via a server-authoritative WebSocket architecture.</p>
         </div>
 
         <div class="stat-row">
-          <div class="stat-box">
-            <div class="stat-val" style="color:var(--accent3);">50K+</div>
-            <div class="stat-label">Active Players</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-val" style="color:var(--accent2);">3</div>
-            <div class="stat-label">Platforms</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-val" style="color:var(--accent);">60fps</div>
-            <div class="stat-label">Target Frame Rate</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-val" style="color:var(--accent4);">Real-time</div>
-            <div class="stat-label">State Sync</div>
-          </div>
+          <div class="stat-box"><div class="stat-val" style="color:var(--accent3);">50K+</div><div class="stat-label">Players</div></div>
+          <div class="stat-box"><div class="stat-val" style="color:var(--accent2);">60fps</div><div class="stat-label">Target Frame Rate</div></div>
+          <div class="stat-box"><div class="stat-val" style="color:var(--accent2);">3</div><div class="stat-label">Platforms</div></div>
+          <div class="stat-box"><div class="stat-val" style="color:var(--accent4);">50ms</div><div class="stat-label">State Sync Interval</div></div>
         </div>
 
         <div class="doc-block">
-          <h3>Core Game Systems</h3>
-          <div class="challenge-list">
-            <div class="challenge-item">
-              <span class="challenge-icon">▸</span>
-              <span class="challenge-text"><strong>Physics Engine:</strong> Custom AABB collision detection with tile-based maps. Gravity, jump arcs, and momentum simulated at 60 ticks/sec using a fixed timestep game loop to ensure determinism.</span>
-            </div>
-            <div class="challenge-item">
-              <span class="challenge-icon">▸</span>
-              <span class="challenge-text"><strong>Combat System:</strong> Hitbox-based melee and ranged attacks with server-authoritative hit validation to prevent client-side cheating.</span>
-            </div>
-            <div class="challenge-item">
-              <span class="challenge-icon">▸</span>
-              <span class="challenge-text"><strong>AI Enemies:</strong> State-machine-driven NPCs with patrol, chase, and attack states. Pathfinding via a simplified A* approach adapted for the tile grid.</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="doc-block" id="gobattle-net">
           <h3>Networking Architecture</h3>
-          <p>The game uses a <strong>server-authoritative model</strong> over WebSockets. The server runs the canonical game loop and broadcasts delta-compressed state updates to all connected clients every 50ms.</p>
+          <p>Server-authoritative model over WebSockets. The server runs the canonical game loop and broadcasts delta-compressed state updates every 50ms. Client-side prediction masks latency for the local player, reconciled against server state on each tick.</p>
           <div class="arch-diagram">
-            <div class="flow-step">
-              <span class="step-box">Client Input</span>
-              <span class="step-arrow">→</span>
-              <span class="step-box">WebSocket</span>
-              <span class="step-arrow">→</span>
-              <span class="step-box">Server Game Loop</span>
-            </div>
-            <div class="flow-step">
-              <span class="step-box">State Delta</span>
-              <span class="step-arrow">→</span>
-              <span class="step-box">Broadcast to Clients</span>
-              <span class="step-arrow">→</span>
-              <span class="step-box">Client Interpolation</span>
-            </div>
+            <div class="flow-step"><span class="step-box">Client Input</span><span class="step-arrow">→</span><span class="step-box">WebSocket</span><span class="step-arrow">→</span><span class="step-box">Server Game Loop</span></div>
+            <div class="flow-step"><span class="step-box">Delta State Broadcast</span><span class="step-arrow">→</span><span class="step-box">Client Interpolation + Reconciliation</span></div>
           </div>
-          <p>Client-side prediction is applied to the local player's movement to mask network latency, then reconciled against the server's authoritative state.</p>
         </div>
       </section>
 
       <div class="section-divider"></div>
 
-      <!-- ─────────────────── PLATEPROMOS ─────────────────── -->
-      <section class="proj-section reveal" id="platepromos">
+      <!-- PLATEPROMOS -->
+      <section class="proj-section" id="platepromos">
         <div class="proj-section-header">
-          <div class="proj-color-bar" style="background: var(--accent4);"></div>
+          <div class="proj-color-bar" style="background:var(--accent);"></div>
           <div class="proj-section-meta">
-            <div class="proj-section-num">Project 04 · 2024 – Present</div>
+            <div class="proj-section-num">Project 06 · 2024 – Present</div>
             <div class="proj-section-title">PlatePromos.com</div>
             <div class="proj-section-tags">
-              <span class="tag tag-orange">Flask</span>
-              <span class="tag tag-orange">Django</span>
+              <span class="tag tag-blue">Flask</span>
               <span class="tag tag-blue">AWS</span>
               <span class="tag tag-gold">Social Impact</span>
             </div>
@@ -801,66 +524,23 @@ model = Sequential([
 
         <div class="doc-block">
           <h3>Overview</h3>
-          <p>PlatePromos is a web platform that connects college students to exclusive discounts at local restaurants and businesses. As CTO and Co-Founder, I designed the full-stack architecture, led engineering from prototype to production, and managed deployment on AWS.</p>
-          <p>The platform was <strong>formally recognized by the Mayor of Encinitas and the California State Senate</strong> for its positive social impact on the student community, and received a $1,000 award.</p>
+          <p>A full-stack student discount platform connecting college students to reduced-cost meals at local restaurants. As CTO and Co-Founder, led all engineering from prototype to AWS production. Formally recognized by the Mayor of Encinitas and the California State Senate; received a $1,000 award.</p>
         </div>
 
         <div class="stat-row">
-          <div class="stat-box">
-            <div class="stat-val" style="color:var(--accent4);">500+</div>
-            <div class="stat-label">Students Served</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-val" style="color:var(--accent);">35+</div>
-            <div class="stat-label">Business Partners</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-val" style="color:var(--accent2);">AWS</div>
-            <div class="stat-label">Infrastructure</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-val" style="color:var(--accent3);">2</div>
-            <div class="stat-label">State Recognitions</div>
-          </div>
-        </div>
-
-        <div class="doc-block" id="platepromos-stack">
-          <h3>Tech Stack</h3>
-          <div class="challenge-list">
-            <div class="challenge-item">
-              <span class="challenge-icon">▸</span>
-              <span class="challenge-text"><strong>Backend:</strong> Python with Flask for lightweight API routes and Django for the admin dashboard and ORM. PostgreSQL database for user/business/deal data.</span>
-            </div>
-            <div class="challenge-item">
-              <span class="challenge-icon">▸</span>
-              <span class="challenge-text"><strong>Frontend:</strong> Server-rendered HTML/CSS with dynamic deal filtering using vanilla JavaScript. Optimized for mobile since most students access via phone.</span>
-            </div>
-            <div class="challenge-item">
-              <span class="challenge-icon">▸</span>
-              <span class="challenge-text"><strong>Infrastructure:</strong> Deployed on AWS EC2 with S3 for media storage. Route 53 for DNS, and a load balancer to handle traffic spikes during peak times (lunch/dinner).</span>
-            </div>
-            <div class="challenge-item">
-              <span class="challenge-icon">▸</span>
-              <span class="challenge-text"><strong>Auth:</strong> Email-verified student accounts using university email domains, preventing non-students from accessing discounts.</span>
-            </div>
-          </div>
+          <div class="stat-box"><div class="stat-val" style="color:var(--accent4);">500+</div><div class="stat-label">Students Served</div></div>
+          <div class="stat-box"><div class="stat-val" style="color:var(--accent2);">35+</div><div class="stat-label">Business Partners</div></div>
+          <div class="stat-box"><div class="stat-val" style="color:var(--accent3);">20%</div><div class="stat-label">More Off-Campus Dining</div></div>
+          <div class="stat-box"><div class="stat-val" style="color:var(--accent2);">$1K</div><div class="stat-label">Award</div></div>
         </div>
 
         <div class="doc-block">
-          <h3>Key Challenges</h3>
+          <h3>Tech Stack and Challenges</h3>
           <div class="challenge-list">
-            <div class="challenge-item">
-              <span class="challenge-icon">!</span>
-              <span class="challenge-text"><strong>Business Onboarding:</strong> Negotiating with 35+ local businesses required building a simple business dashboard for them to self-manage their deals — reducing my operational overhead significantly.</span>
-            </div>
-            <div class="challenge-item">
-              <span class="challenge-icon">!</span>
-              <span class="challenge-text"><strong>Abuse Prevention:</strong> Some deals were being shared outside the student community. Implemented single-use QR codes per deal per user, regenerated on a daily basis.</span>
-            </div>
-            <div class="challenge-item">
-              <span class="challenge-icon">!</span>
-              <span class="challenge-text"><strong>Scaling:</strong> Traffic spikes around meal times caused initial slowdowns. Resolved with database query optimization, Redis caching for frequently accessed deal listings, and EC2 auto-scaling rules.</span>
-            </div>
+            <div class="challenge-item"><span class="challenge-icon">▸</span><span class="challenge-text"><strong>Backend:</strong> Python/Flask for API routes, PostgreSQL for data. University email domain verification restricts access to students only.</span></div>
+            <div class="challenge-item"><span class="challenge-icon">▸</span><span class="challenge-text"><strong>Infrastructure:</strong> AWS EC2 + S3 for media storage, Route 53 for DNS, load balancer for meal-time traffic spikes.</span></div>
+            <div class="challenge-item"><span class="challenge-icon">▸</span><span class="challenge-text"><strong>Abuse prevention:</strong> Single-use QR codes per user per deal, regenerated daily, preventing deal sharing outside the student community.</span></div>
+            <div class="challenge-item"><span class="challenge-icon">▸</span><span class="challenge-text"><strong>Scaling:</strong> Redis caching for deal listings and EC2 auto-scaling resolved peak-hour slowdowns.</span></div>
           </div>
         </div>
       </section>
@@ -874,41 +554,29 @@ model = Sequential([
   </footer>
 
   <script>
-    // Theme
+    // Theme toggle
     const html = document.documentElement;
     const btn = document.getElementById('themeToggle');
     const saved = localStorage.getItem('theme') || 'dark';
     html.setAttribute('data-theme', saved);
-
     btn.addEventListener('click', () => {
       const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
       html.setAttribute('data-theme', next);
       localStorage.setItem('theme', next);
     });
 
-    // Scroll reveal
-    const reveals = document.querySelectorAll('.reveal');
-    const obs = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) e.target.classList.add('visible');
-      });
-    }, { threshold: 0.08 });
-    reveals.forEach(el => obs.observe(el));
-
     // Active sidebar link on scroll
     const sections = document.querySelectorAll('.proj-section');
     const sideLinks = document.querySelectorAll('.sidebar a');
-
-    const sectionObs = new IntersectionObserver((entries) => {
+    const sectionObs = new IntersectionObserver(entries => {
       entries.forEach(e => {
         if (e.isIntersecting) {
           sideLinks.forEach(a => a.classList.remove('active'));
-          const link = document.querySelector(`.sidebar a[href="#${e.target.id}"]`);
+          const link = document.querySelector('.sidebar a[href="#' + e.target.id + '"]');
           if (link) link.classList.add('active');
         }
       });
     }, { threshold: 0.3 });
-
     sections.forEach(s => sectionObs.observe(s));
   </script>
 </body>
