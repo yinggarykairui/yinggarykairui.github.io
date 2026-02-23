@@ -171,16 +171,90 @@
     footer { border-top: 1px solid var(--border); text-align: center; padding: 3rem; font-family: var(--mono); font-size: 0.72rem; color: var(--muted); }
     footer a { color: var(--accent2); text-decoration: none; }
 
+    /* HAMBURGER */
+    .hamburger {
+      display: none; flex-direction: column; justify-content: center;
+      gap: 5px; cursor: pointer; background: none; border: none; padding: 4px;
+    }
+    .hamburger span {
+      display: block; width: 22px; height: 2px;
+      background: var(--muted); border-radius: 2px;
+      transition: transform 0.25s, opacity 0.25s;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* MOBILE DRAWER */
+    .mobile-menu {
+      display: none; position: fixed; inset: 0; z-index: 200;
+      background: var(--bg); flex-direction: column;
+      padding: 6rem 2rem 2rem; gap: 0; transition: background 0.3s;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-family: var(--mono); font-size: 1rem; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--text); text-decoration: none;
+      padding: 1.2rem 0; border-bottom: 1px solid var(--border); transition: color 0.2s;
+    }
+    .mobile-menu a:hover { color: var(--accent2); }
+
     @media (max-width: 860px) {
-      .page-wrap { grid-template-columns: 1fr; }
-      .sidebar { display: none; }
-      .main-content { padding: 2rem 1.5rem 5rem; }
-      nav { padding: 1rem 1.5rem; }
+      /* Nav */
+      nav { padding: 1rem 1.2rem; }
       .nav-links { display: none; }
+      .hamburger { display: flex; }
+
+      /* Layout */
+      .page-wrap { grid-template-columns: 1fr; padding-top: 4rem; }
+      .sidebar { display: none; }
+      .main-content { padding: 2rem 1.2rem 4rem; }
+
+      /* Docs hero */
+      .docs-hero { margin-bottom: 2.5rem; padding-bottom: 2rem; }
+
+      /* Project sections */
+      .proj-section { margin-bottom: 4rem; }
+      .proj-section-header { gap: 1rem; }
+      .proj-color-bar { min-height: 40px; }
+      .proj-section-title { font-size: 1.3rem; }
+
+      /* Stats: 2 columns */
+      .stat-row { grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+
+      /* Arch diagrams */
+      .arch-diagram { padding: 1rem; font-size: 0.72rem; }
+      .step-box { white-space: normal; font-size: 0.7rem; }
+
+      /* Code blocks */
+      .code-block { padding: 1rem; }
+      .code-block pre { font-size: 0.72rem; }
+
+      /* Challenge items */
+      .challenge-item { padding: 0.8rem 1rem; }
+      .challenge-text { font-size: 0.84rem; }
+
+      .section-divider { margin: 3rem 0; }
+
+      footer { padding: 2rem 1rem; font-size: 0.65rem; }
+      footer p { line-height: 2; }
+    }
+
+    @media (max-width: 400px) {
+      .stat-row { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
+
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="../index.html#experience" onclick="closeMobileMenu()">Experience</a>
+    <a href="../index.html#projects" onclick="closeMobileMenu()">Projects</a>
+    <a href="../index.html#skills" onclick="closeMobileMenu()">Skills</a>
+    <a href="#" onclick="closeMobileMenu()">Docs</a>
+    <a href="mailto:yinggarykairui@gmail.com">Contact</a>
+  </div>
 
   <nav>
     <a class="nav-logo" href="../index.html">
@@ -195,7 +269,7 @@
         <li><a href="../index.html#projects">Projects</a></li>
         <li><a href="../index.html#skills">Skills</a></li>
         <li><a href="#" class="active">Docs</a></li>
-        <li><a href="mailto:yinggarykairui@gmail.com">Contact</a></li>
+        <li><a href="/cdn-cgi/l/email-protection#1a6373747d7d7b6863717b73686f735a7d777b737634797577">Contact</a></li>
       </ul>
       <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark mode">
         <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -208,6 +282,9 @@
           <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
           <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
         </svg>
+      </button>
+      <button class="hamburger" id="hamburger" aria-label="Open menu">
+        <span></span><span></span><span></span>
       </button>
     </div>
   </nav>
@@ -557,7 +634,7 @@
   </div>
 
   <footer>
-    <p>Kairui (Gary) Ying &nbsp;·&nbsp; <a href="mailto:yinggarykairui@gmail.com">yinggarykairui@gmail.com</a> &nbsp;·&nbsp; <a href="https://github.com/yinggarykairui">github.com/yinggarykairui</a></p>
+    <p>Kairui (Gary) Ying &nbsp;·&nbsp; <a href="/cdn-cgi/l/email-protection#384151565f5f594a415359514a4d51785f55595154165b5755"><span class="__cf_email__" data-cfemail="a4ddcdcac3c3c5d6ddcfc5cdd6d1cde4c3c9c5cdc88ac7cbc9">[email&#160;protected]</span></a> &nbsp;·&nbsp; <a href="https://github.com/yinggarykairui">github.com/yinggarykairui</a></p>
     <p style="margin-top:0.5rem;opacity:0.4;">Built with HTML &amp; CSS · Hosted on GitHub Pages</p>
   </footer>
 
@@ -572,6 +649,20 @@
       html.setAttribute('data-theme', next);
       localStorage.setItem('theme', next);
     });
+
+    // Hamburger
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('open');
+      mobileMenu.classList.toggle('open');
+      document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+    });
+    function closeMobileMenu() {
+      hamburger.classList.remove('open');
+      mobileMenu.classList.remove('open');
+      document.body.style.overflow = '';
+    }
 
     // Active sidebar link on scroll
     const sections = document.querySelectorAll('.proj-section');
